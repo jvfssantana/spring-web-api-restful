@@ -5,5 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import io.github.jvfssantana.entity.Cliente;
 
 public interface Clientes extends JpaRepository<Cliente, Integer>{
+	
 	List<Cliente> findByNomeLike(String nome);
+	List<Cliente> findByNomeOrId(String nome, Integer id);
+	boolean existsByNome(String nome);
 }
