@@ -19,29 +19,29 @@ public class JpaApplication {
 		return args -> {
 			
 			System.out.println("Salvando clientes!");
-			clientes.salvarCliente(new Cliente("João"));
-			clientes.salvarCliente(new Cliente("Maria"));
+			clientes.save(new Cliente("João"));
+			clientes.save(new Cliente("Maria"));
 			
-			List<Cliente> todosClientes = clientes.obterTodos();
+			List<Cliente> todosClientes = clientes.findAll();
 			todosClientes.forEach(System.out::println);
 			
 			System.out.println("Atualizando todos os clientes!");
 			todosClientes.forEach(c -> {
 				c.setNome(c.getNome() + " atualizado!");
-				clientes.atualizar(c);
+				clientes.save(c);
 			});
 			
 			todosClientes.forEach(System.out::println);
 			
 			System.out.println("Buscando por nome o cliente!");
-			clientes.buscarPorNome("Jo").forEach(System.out::println);
+			clientes.findByNomeLike("Jo").forEach(System.out::println);
 			
 			System.out.println("Deletando todos os clientes!");
-			clientes.obterTodos().forEach(c -> {
-				clientes.deletar(c);
+			clientes.findAll().forEach(c -> {
+				clientes.delete(c);
 			});
 
-			todosClientes = clientes.obterTodos();
+			todosClientes = clientes.findAll();
 			if(todosClientes.isEmpty() ) {
 				System.out.println("Nenhum clientes encontrado!");
 			} else {
