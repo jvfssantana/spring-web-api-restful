@@ -1,4 +1,4 @@
-package io.github.jvfssantana.repositorio;
+package io.github.jvfssantana.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

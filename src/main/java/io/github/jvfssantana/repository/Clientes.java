@@ -1,4 +1,4 @@
-package io.github.jvfssantana.repositorio;
+package io.github.jvfssantana.repository;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +21,8 @@ public interface Clientes extends JpaRepository<Cliente, Integer>{
 	void deleteByNome(String nome);
 	
 	boolean existsByNome(String nome);
+	
+	@Query("select c from Cliente c left join fetch c.pedidos where c.id = :id")
+	Cliente findClienteFetchPedidos(@Param("id") Integer id);
+	
 }
