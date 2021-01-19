@@ -9,8 +9,6 @@ import io.github.jvfssantana.entity.Pedido;
 
 public interface Pedidos extends JpaRepository<Pedido, Integer>{
 
-		
 	List<Pedido> findByCliente(Cliente cliente);
-	
 	
 }
