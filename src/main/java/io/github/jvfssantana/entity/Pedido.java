@@ -14,6 +14,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "pedido")
 public class Pedido {
@@ -36,61 +43,4 @@ public class Pedido {
 	@OneToMany(mappedBy = "pedido")
 	private List<ItemPedido> pedidos;
 	
-	public Pedido() {
-		
-	}
-
-	public Pedido(Integer id, Cliente cliente, LocalDate data_pedido, BigDecimal total) {
-		super();
-		this.id = id;
-		this.cliente = cliente;
-		this.data_pedido = data_pedido;
-		this.total = total;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
-	public LocalDate getData_pedido() {
-		return data_pedido;
-	}
-
-	public void setData_pedido(LocalDate data_pedido) {
-		this.data_pedido = data_pedido;
-	}
-
-	public BigDecimal getTotal() {
-		return total;
-	}
-
-	public void setTotal(BigDecimal total) {
-		this.total = total;
-	}
-
-	public List<ItemPedido> getPedidos() {
-		return pedidos;
-	}
-
-	public void setPedidos(List<ItemPedido> pedidos) {
-		this.pedidos = pedidos;
-	}
-
-	@Override
-	public String toString() {
-		return "Pedido [id=" + id + ", data_pedido=" + data_pedido + ", total=" + total + "]";
-	}
-
 }
