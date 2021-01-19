@@ -24,6 +24,10 @@ public class Produto {
 	@Column(name = "preco_unitario")
 	private BigDecimal preco_unitario;
 	
+	public Produto() {
+		
+	}
+	
 	public Produto(Integer id, String descricao, BigDecimal preco_unitario) {
 		super();
 		this.id = id;
