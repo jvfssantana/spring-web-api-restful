@@ -2,6 +2,7 @@ package io.github.jvfssantana.service.implementacao;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import io.github.jvfssantana.entity.Cliente;
 import io.github.jvfssantana.entity.ItemPedido;
 import io.github.jvfssantana.entity.Pedido;
 import io.github.jvfssantana.entity.Produto;
+import io.github.jvfssantana.enums.StatusPedido;
+import io.github.jvfssantana.exception.PedidoNaoEncontradoException;
 import io.github.jvfssantana.exception.RegrasNegocioException;
 import io.github.jvfssantana.repository.Clientes;
 import io.github.jvfssantana.repository.ItemsPedido;
@@ -25,26 +28,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PedidoServiceImplementacao implements PedidoService {
 	
-	private final Pedidos pedidos;
-	private final Clientes clientes;
-	private final Produtos produtos;
+	private final Pedidos pedidosRepository;
+	private final Clientes clientesRepository;
+	private final Produtos produtosRepository;
 	private final ItemsPedido itemsPedidoRepository;
 	
 	@Override
 	@Transactional
 	public Pedido salvarPedido(PedidoDTO dto) {
 		Integer idCliente = dto.getCliente();
-		Cliente cliente = clientes.findById(idCliente).orElseThrow(() -> new RegrasNegocioException("Código de cliente inválido!"));
+		Cliente cliente = clientesRepository.findById(idCliente).orElseThrow(() -> new RegrasNegocioException("Código de cliente inválido!"));
 		
 		Pedido pedido = new Pedido();
 		pedido.setTotal(dto.getTotal());
 		pedido.setData_pedido(LocalDate.now());
 		pedido.setCliente(cliente);
+		pedido.setStatus(StatusPedido.REALIZADO);
 		
 		List<ItemPedido> itemsPedido = converterItems(pedido, dto.getItems());
-		pedidos.save(pedido);
+		pedidosRepository.save(pedido);
 		itemsPedidoRepository.saveAll(itemsPedido);
-		pedido.setPedidos(itemsPedido);
+		pedido.setItens(itemsPedido);
 		return pedido;
 	}
 	
@@ -57,7 +61,7 @@ public class PedidoServiceImplementacao implements PedidoService {
 				.stream()
 				.map(dto -> {
 					Integer idProduto = dto.getProduto();
-					Produto produto = produtos.findById(idProduto).orElseThrow(() -> new RegrasNegocioException("Código de produto inválido: " + idProduto));
+					Produto produto = produtosRepository.findById(idProduto).orElseThrow(() -> new RegrasNegocioException("Código de produto inválido: " + idProduto));
 					
 					ItemPedido itemPedido = new ItemPedido();
 					itemPedido.setQuantidade(dto.getQuantidade());
@@ -66,5 +70,19 @@ public class PedidoServiceImplementacao implements PedidoService {
 					return itemPedido;
 					
 				}).collect(Collectors.toList()); 		
+	}
+
+	@Override
+	public Optional<Pedido> obterPedidoCompleto(Integer id) {
+		return pedidosRepository.findByIdFetchItens(id);
+	}
+
+	@Override
+	@Transactional
+	public void atualizaStatusPedido(Integer id, StatusPedido statusPedido) {
+		pedidosRepository.findById(id).map(pedido -> {
+			pedido.setStatus(statusPedido);
+			return pedidosRepository.save(pedido);
+		}).orElseThrow(() -> new PedidoNaoEncontradoException("Pedido não encontrado!"));		
 	}
 }
