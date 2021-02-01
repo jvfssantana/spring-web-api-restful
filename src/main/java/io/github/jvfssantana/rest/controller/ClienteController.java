@@ -2,6 +2,8 @@ package io.github.jvfssantana.rest.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,53 +19,53 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.http.HttpStatus.*;
 
 import io.github.jvfssantana.entity.Cliente;
-import io.github.jvfssantana.repository.Clientes;
+import io.github.jvfssantana.repository.ClienteRepository;
 
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
 	
-	private Clientes clientes; 
+	private ClienteRepository clienteRepository; 
 	
-	public ClienteController(Clientes clientes) {
-		this.clientes = clientes;
+	public ClienteController(ClienteRepository clientes) {
+		this.clienteRepository = clientes;
 	}
 
 	@GetMapping("{id}")
 	public Cliente buscaClienteById(@PathVariable Integer id) {
-		return clientes.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Cliente não encontrado")); 
+		return clienteRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Cliente não encontrado")); 
 	}
 
 	@PostMapping
 	@ResponseStatus(CREATED)
-	public Cliente salvarCliente(@RequestBody Cliente cliente) {
-		return clientes.save(cliente);
+	public Cliente salvarCliente(@RequestBody @Valid Cliente cliente) {
+		return clienteRepository.save(cliente);
 	}
 	
 	@DeleteMapping("{id}")
 	@ResponseStatus(NO_CONTENT)
 	public void deletaCliente(@PathVariable Integer id) {		
-		clientes.findById(id).map(cliente -> {
-				clientes.delete(cliente);
+		clienteRepository.findById(id).map(cliente -> {
+				clienteRepository.delete(cliente);
 				return cliente;
-			})
-			.orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Cliente não encontrado"));
+			}).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Cliente não encontrado"));
 	}
 	
 	@PutMapping("{id}")
 	@ResponseStatus(NO_CONTENT)
-	public void atualizarCliente(@PathVariable Integer id,  @RequestBody Cliente cliente) {
-		clientes.findById(id).map(clienteExistente -> {
-				cliente.setId(clienteExistente.getId());
-				clientes.save(cliente);
-				return clienteExistente;
+	public void atualizarCliente(@PathVariable Integer id,  @RequestBody @Valid Cliente cliente) {
+		clienteRepository.findById(id).map(c -> {
+				cliente.setId(c.getId());
+				clienteRepository.save(cliente);
+				return c;
 			}).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Cliente não encontrado"));
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping
 	public List<Cliente> buscaTodosClientes(Cliente lista) {
 		ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 		Example example = Example.of(lista, matcher);
-		return clientes.findAll(example); 
+		return clienteRepository.findAll(example); 
 	}
 }

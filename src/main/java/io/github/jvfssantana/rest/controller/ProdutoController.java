@@ -2,6 +2,8 @@ package io.github.jvfssantana.rest.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,15 +19,15 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.http.HttpStatus.*;
 
 import io.github.jvfssantana.entity.Produto;
-import io.github.jvfssantana.repository.Produtos;
+import io.github.jvfssantana.repository.ProdutoRepository;
 
 @RestController
 @RequestMapping("/api/produtos")
 public class ProdutoController {
 
-	private Produtos produtos;
+	private ProdutoRepository produtos;
 
-	public ProdutoController(Produtos produtos) {
+	public ProdutoController(ProdutoRepository produtos) {
 		this.produtos = produtos;
 	}
 
@@ -36,7 +38,7 @@ public class ProdutoController {
 	
 	@PostMapping
 	@ResponseStatus(CREATED)
-	public Produto salvaProduto(@RequestBody Produto produto) {
+	public Produto salvaProduto(@RequestBody @Valid Produto produto) {
 		return produtos.save(produto);
 	}
 	
@@ -51,7 +53,7 @@ public class ProdutoController {
 	
 	@PutMapping("{id}")
 	@ResponseStatus(NO_CONTENT)
-	public void atualizarProduto(@PathVariable Integer id, @RequestBody Produto produto) {
+	public void atualizarProduto(@PathVariable Integer id, @RequestBody @Valid Produto produto) {
 		produtos.findById(id).map(p -> {
 				produto.setId(p.getId());
 				produtos.save(produto);

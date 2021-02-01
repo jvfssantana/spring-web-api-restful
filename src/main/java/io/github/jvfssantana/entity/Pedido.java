@@ -35,6 +35,7 @@ public class Pedido {
 	
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
+	
 	private Cliente cliente;
 	
 	@Column(name = "data_pedido")
@@ -49,5 +50,4 @@ public class Pedido {
 	
 	@OneToMany(mappedBy = "pedido")
 	private List<ItemPedido> itens;
-	
 }

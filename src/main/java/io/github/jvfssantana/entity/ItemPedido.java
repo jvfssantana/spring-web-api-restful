@@ -35,5 +35,4 @@ public class ItemPedido {
 	
 	@Column(name = "quantidade")
 	private Integer quantidade;
-
 }

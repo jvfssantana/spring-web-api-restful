@@ -1,6 +1,5 @@
 package io.github.jvfssantana.rest.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +17,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import io.github.jvfssantana.entity.ItemPedido;
 import io.github.jvfssantana.entity.Pedido;
@@ -40,7 +41,7 @@ public class PedidoController {
 	
 	@PostMapping
 	@ResponseStatus(CREATED)
-	public Integer salvarPedido(@RequestBody PedidoDTO dto) {
+	public Integer salvarPedido(@RequestBody @Valid PedidoDTO dto) {
 		Pedido pedido = pedidoService.salvarPedido(dto);
 		return pedido.getId();
 	}

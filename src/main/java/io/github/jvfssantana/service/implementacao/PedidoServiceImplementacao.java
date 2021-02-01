@@ -15,10 +15,10 @@ import io.github.jvfssantana.entity.Produto;
 import io.github.jvfssantana.enums.StatusPedido;
 import io.github.jvfssantana.exception.PedidoNaoEncontradoException;
 import io.github.jvfssantana.exception.RegrasNegocioException;
-import io.github.jvfssantana.repository.Clientes;
-import io.github.jvfssantana.repository.ItemsPedido;
-import io.github.jvfssantana.repository.Pedidos;
-import io.github.jvfssantana.repository.Produtos;
+import io.github.jvfssantana.repository.ClienteRepository;
+import io.github.jvfssantana.repository.ItemPedidoRepository;
+import io.github.jvfssantana.repository.PedidoRepository;
+import io.github.jvfssantana.repository.ProdutoRepository;
 import io.github.jvfssantana.rest.dto.ItemPedidoDTO;
 import io.github.jvfssantana.rest.dto.PedidoDTO;
 import io.github.jvfssantana.service.PedidoService;
@@ -28,10 +28,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PedidoServiceImplementacao implements PedidoService {
 	
-	private final Pedidos pedidosRepository;
-	private final Clientes clientesRepository;
-	private final Produtos produtosRepository;
-	private final ItemsPedido itemsPedidoRepository;
+	private final PedidoRepository pedidosRepository;
+	private final ClienteRepository clientesRepository;
+	private final ProdutoRepository produtosRepository;
+	private final ItemPedidoRepository itemsPedidoRepository;
 	
 	@Override
 	@Transactional
