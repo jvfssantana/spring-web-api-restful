@@ -19,10 +19,9 @@ public class ApplicationControllerAdvice {
 	@ExceptionHandler(RegrasNegocioException.class)
 	@ResponseStatus(BAD_REQUEST)
 	public ApiErrors handleRegraNegocioException(RegrasNegocioException exception) {
-		String mensagemErro = exception.getMessage();
-		return new ApiErrors(mensagemErro);
+		return new ApiErrors(exception.getMessage());
 	}
-	
+		
 	@ExceptionHandler(PedidoNaoEncontradoException.class)
 	@ResponseStatus(NOT_FOUND)
 	public ApiErrors handlePedidoNotFoundException(PedidoNaoEncontradoException exception) {
@@ -36,7 +35,5 @@ public class ApplicationControllerAdvice {
 		List<String> errors = argumentNotValidException.getBindingResult().getAllErrors().stream().map(erro -> erro.getDefaultMessage()).collect(Collectors.toList());
 		return new 	ApiErrors(errors);
 	}
-	
-	
 	
 }
