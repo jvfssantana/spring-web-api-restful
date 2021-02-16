@@ -68,4 +68,5 @@ public class ClienteController {
 		Example example = Example.of(lista, matcher);
 		return clienteRepository.findAll(example); 
 	}
+	
 }
